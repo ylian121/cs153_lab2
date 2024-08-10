@@ -346,7 +346,7 @@ scheduler(void)
   c->proc = 0;
 
   for(;;){
-    // Enable interrupts on this processor.
+    //Enable interrupts on this processor.
     sti();
     //declare priority value variable
     //range: 0 to 30 then highest priority can't pass 31
