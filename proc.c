@@ -544,8 +544,8 @@ procdump(void)
 
 void setpriority(int priority_lvl)
 {
-    struct proc *currproc = myproc();
-    currproc->priority_val = priority_lvl;
+    struct proc *curproc = myproc();
+    curproc->priority_val = priority_lvl;
     yield();
 
 }
