@@ -356,7 +356,7 @@ scheduler(void)
     struct proc * priority_process = 0; 
     
     //need starting run time 
-    int arrTime = 0;
+    //int arrTime = 0;
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
