@@ -7,6 +7,11 @@
 #include "proc.h"
 #include "spinlock.h"
 
+#include <cstdlib> 
+#include <iostream> 
+#include <random>
+using namespace std; 
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
