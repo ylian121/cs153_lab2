@@ -6,11 +6,11 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "random.h"
 
 #include <cstdlib> 
 #include <iostream> 
 #include <random>
-using namespace std; 
 
 struct {
   struct spinlock lock;
@@ -435,13 +435,17 @@ scheduler(void)
 
     }
 
+    //use random function to generate random num
+    winner = randomRange(1, ticket_number);
+
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
       //can only run states that are runnable
       if(p->state!= RUNNABLE)
         continue;
 
-      if(p->priority_val == h_prior_val){
+      //check winner
+      if(winner >= (p->ticket_start) && winner <= (p->ticket_end)){
         // Switch to chosen process.  It is the process's job
         // to release ptable.lock and then reacquire it
         // before jumping back to us.
@@ -455,6 +459,7 @@ scheduler(void)
         // Process is done running for now.
         // It should have changed its p->state before coming back.
         c->proc=0;
+        break;
       }
     }
   
