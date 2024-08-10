@@ -406,12 +406,26 @@ scheduler(void)
       if(p->state!= RUNNABLE)
         continue;
       
+      //proc with priority level of 10
+      //would have ticket of 22 if the max ticket is 32 (32-10=22)
+      //22 = num of tickets that proc have
       p->ticket = max-(p->priority_val);
 
       if(p->ticket<1){
         p->ticket = 1;
       }
 
+      //keep track of range for each ticket
+      //last ticket of last proc is 10
+      //then start of next proc ticket will be +1 = 11
+      //keep track of end as well
+      p->ticket_start = last_ticket+1;
+      p->ticket_end = last_ticket + (p->ticket); 
+
+      //update last ticket
+      last_ticket = last_ticket + (p->ticket_end);
+
+      //total
       ticket_number = ticket_number + (p->ticket);
 
     }
