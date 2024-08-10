@@ -406,12 +406,8 @@ scheduler(void)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
       //can only run states that are runnable
-      if(p->state!= RUNNABLE)
+      if(p->state!= RUNNABLE || p == priority_process)
         continue;
-
-      if(p == priority_process){
-        continue;
-      }
 
       //decrease proc that hasn't run yet
       if(p->priority_val > 0) {
