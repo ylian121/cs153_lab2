@@ -328,6 +328,18 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+
+//implementing task 4
+//lottery scheduler
+//Implement lottery scheduling: 
+//Based on priority, you give every process a proportional 
+//number of tickets (e.g., priority 1 gets 1 ticket, 
+//priority 10, 16 tickets). To schedule, you hold a 
+//lottery and pick a random ticket number, 
+//scheduling the process that holds that ticket 
+//(you have to design a way to associate numbers with tickets 
+//so that you can map from a random number you generate to 
+//identify the process that holds that ticket). 
 void
 scheduler(void)
 {
