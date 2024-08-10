@@ -353,7 +353,20 @@ scheduler(void)
     sti();
     //declare priority value variable
     //range: 0 to 30 then highest priority can't pass 31
-    int h_prior_val = 31;
+    //int h_prior_val = 31;
+
+    //need way to create random numbers to generate
+
+    //need total lottery tickets
+    //proc that has selected ticket -> basically winner of lottery
+    //max tickets per proc
+
+    //start with 0 tickets
+    int ticket_number = 0;
+
+    int max = 32;
+
+    int winner = 0;
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
