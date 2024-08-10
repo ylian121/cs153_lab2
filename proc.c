@@ -369,9 +369,40 @@ scheduler(void)
       
       if(p->priority_val < h_prior_val){
         h_prior_val = p->priority_val;
+        //set highest
+        priority_process = p;
       }
     }
 
+    //check if there are runnable proc
+    if(priority_process == 0) {
+      release(&ptable.lock);
+      continue;
+    }
+
+
+    //run
+    c->proc = priority_process;
+
+    switchuvm(priority_process);
+    priority_process->state = RUNNING;
+
+    swtch(&(c->scheduler), priority_process->context);
+    switchkvm();
+
+
+    //aging
+    //increase priority after run
+    //the lower the priority, the better and faster it runs
+    //highest: 0 and lowest: 30
+    if(priority_process->priority_val < 30) {
+      (priority_process->priority_val)++;
+    }
+
+    c->proc = 0;
+
+    //aging
+    //update other priorities
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
       //can only run states that are runnable
