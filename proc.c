@@ -93,6 +93,9 @@ found:
   //step 2 allocproc
   //initialize to 10
   p->priority_val = 10;
+  
+  //change lottery shceduler
+  p->ticket = 0;
 
   release(&ptable.lock);
 
@@ -340,6 +343,19 @@ wait(void)
 //(you have to design a way to associate numbers with tickets 
 //so that you can map from a random number you generate to 
 //identify the process that holds that ticket). 
+
+
+//research:
+//Processes are each assigned some number of lottery tickets, 
+//and the scheduler draws a random ticket to select the next process.
+//Giving each process at least one lottery ticket guarantees that 
+//it has non-zero probability of being selected at each scheduling operation.
+//A and B, and imagine that A has 75 tickets while B has 25. 
+//Thus, what we would like is for A to receive 75% of the CPU and B the remaining 25%. 
+//the scheduler must know how many total tickets there are (in our example, 
+//there are 100). The scheduler then picks a winning ticket, which is a number from 0 to 99. 
+
+
 void
 scheduler(void)
 {
@@ -368,8 +384,11 @@ scheduler(void)
 
     int winner = 0;
 
+
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+
+    //lottery scheduler
 
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
@@ -377,9 +396,14 @@ scheduler(void)
       if(p->state!= RUNNABLE)
         continue;
       
-      if(p->priority_val < h_prior_val){
-        h_prior_val = p->priority_val;
+      p->ticket = max-(p->priority_val);
+
+      if(p->ticket<1){
+        p->ticket = 1;
       }
+
+      ticket_number = ticket_number + (p->ticket);
+
     }
 
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
