@@ -76,6 +76,7 @@ allocproc(void)
   struct proc *p;
   char *sp;
 
+
   acquire(&ptable.lock);
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
@@ -88,6 +89,10 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+
+  //step 2 allocproc
+  //initialize to 10
+  p->priority_val = 10;
 
   release(&ptable.lock);
 
@@ -209,6 +214,9 @@ fork(void)
   np->cwd = idup(curproc->cwd);
 
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
+
+  //child inherit parent priority val
+  np->priority_val=curproc->priority_val;
 
   pid = np->pid;
 
@@ -531,4 +539,12 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+void setpriority(int priority_lvl)
+{
+    struct proc *currproc = myproc();
+    currproc->priority_val = priority_lvl;
+    yield();
+
 }
