@@ -218,6 +218,7 @@ fork(void)
   //child inherit parent priority val
   np->priority_val=curproc->priority_val;
 
+
   pid = np->pid;
 
   acquire(&ptable.lock);
