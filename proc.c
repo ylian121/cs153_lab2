@@ -542,10 +542,12 @@ procdump(void)
   }
 }
 
+//syscall set priority
+//hint call yield
 void setpriority(int priority_lvl)
 {
-    struct proc *curproc = myproc();
-    curproc->priority_val = priority_lvl;
-    yield();
+  struct proc *curproc = myproc();
+  curproc->priority_val = priority_lvl;
+  yield();
 
 }
