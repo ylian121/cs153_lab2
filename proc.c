@@ -328,6 +328,15 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+
+//implementing task 1
+//aging priority
+//adding onto the task 0 priority scheduler
+//To avoid starvation, implement aging of priority. 
+//If a process waits increase its priority. 
+//When it runs, decrease it. 
+//Note that you have to remember the baseline priority. 
+//Otherwise, the design is up to you.
 void
 scheduler(void)
 {
@@ -342,12 +351,6 @@ scheduler(void)
     //declare priority value variable
     //range: 0 to 30 then highest priority can't pass 31
     int h_prior_val = 31;
-
-    //highest priority process 
-    struct proc * priority_process = 0; 
-    
-    //need starting run time 
-    int arrTime = 0;
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
