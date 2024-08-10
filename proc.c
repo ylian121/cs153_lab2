@@ -352,6 +352,12 @@ scheduler(void)
     //range: 0 to 30 then highest priority can't pass 31
     int h_prior_val = 31;
 
+    //highest priority process 
+    struct proc * priority_process = 0; 
+    
+    //need starting run time 
+    int arrTime = 0;
+
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
 
