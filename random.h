@@ -1,7 +1,4 @@
-#include <cstdlib> 
-#include <iostream> 
-#include <random>
-using namespace std; 
+#include <cstdlib>
 
 #include "param.h"
 #include "types.h"

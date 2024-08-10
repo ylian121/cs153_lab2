@@ -8,9 +8,6 @@
 #include "spinlock.h"
 #include "random.h"
 
-#include <cstdlib> 
-#include <iostream> 
-#include <random>
 
 struct {
   struct spinlock lock;
