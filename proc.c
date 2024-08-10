@@ -97,6 +97,10 @@ found:
   //change lottery shceduler
   p->ticket = 0;
 
+  //keep track of ticket start and end
+  p->ticket_start = 1;
+  p->ticket_end = 1;
+
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -383,6 +387,12 @@ scheduler(void)
     int max = 32;
 
     int winner = 0;
+
+    //need range??
+    //need to keep track of the range each ticket has
+    int start_ticket = 0;
+
+    int last_ticket = 0;
 
 
     // Loop over process table looking for process to run.
