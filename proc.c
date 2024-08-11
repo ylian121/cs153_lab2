@@ -6,8 +6,6 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-#include "random.h"
-
 
 struct {
   struct spinlock lock;
@@ -78,7 +76,6 @@ allocproc(void)
   struct proc *p;
   char *sp;
 
-
   acquire(&ptable.lock);
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
@@ -91,17 +88,6 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-
-  //step 2 allocproc
-  //initialize to 10
-  p->priority_val = 10;
-  
-  //change lottery shceduler
-  p->ticket = 0;
-
-  //keep track of ticket start and end
-  p->ticket_start = 1;
-  p->ticket_end = 1;
 
   release(&ptable.lock);
 
@@ -224,10 +210,6 @@ fork(void)
 
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
-  //child inherit parent priority val
-  np->priority_val=curproc->priority_val;
-
-
   pid = np->pid;
 
   acquire(&ptable.lock);
@@ -337,136 +319,9 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
-
-//implementing task 4
-//lottery scheduler
-//Implement lottery scheduling: 
-//Based on priority, you give every process a proportional 
-//number of tickets (e.g., priority 1 gets 1 ticket, 
-//priority 10, 16 tickets). To schedule, you hold a 
-//lottery and pick a random ticket number, 
-//scheduling the process that holds that ticket 
-//(you have to design a way to associate numbers with tickets 
-//so that you can map from a random number you generate to 
-//identify the process that holds that ticket). 
-
-
-//research:
-//Processes are each assigned some number of lottery tickets, 
-//and the scheduler draws a random ticket to select the next process.
-//Giving each process at least one lottery ticket guarantees that 
-//it has non-zero probability of being selected at each scheduling operation.
-//A and B, and imagine that A has 75 tickets while B has 25. 
-//Thus, what we would like is for A to receive 75% of the CPU and B the remaining 25%. 
-//the scheduler must know how many total tickets there are (in our example, 
-//there are 100). The scheduler then picks a winning ticket, which is a number from 0 to 99. 
-
-
 void
 scheduler(void)
 {
-
-  struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
-
-  for(;;){
-    // Enable interrupts on this processor.
-    sti();
-    //declare priority value variable
-    //range: 0 to 30 then highest priority can't pass 31
-    //int h_prior_val = 31;
-
-    //need way to create random numbers to generate
-
-    //need total lottery tickets
-    //proc that has selected ticket -> basically winner of lottery
-    //max tickets per proc
-
-    //start with 0 tickets
-    int ticket_number = 0;
-
-    int max = 32;
-
-    int winner = 0;
-
-    //need range??
-    //need to keep track of the range each ticket has
-    //int start_ticket = 0;
-
-    int last_ticket = 0;
-
-
-    // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-
-    //lottery scheduler
-
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    {
-      //can only run states that are runnable
-      if(p->state!= RUNNABLE)
-        continue;
-      
-      //proc with priority level of 10
-      //would have ticket of 22 if the max ticket is 32 (32-10=22)
-      //22 = num of tickets that proc have
-      p->ticket = max-(p->priority_val);
-
-      if(p->ticket<1){
-        p->ticket = 1;
-      }
-
-      //keep track of range for each ticket
-      //last ticket of last proc is 10
-      //then start of next proc ticket will be +1 = 11
-      //keep track of end as well
-      p->ticket_start = last_ticket+1;
-      p->ticket_end = last_ticket + (p->ticket); 
-
-      //update last ticket
-      last_ticket = last_ticket + (p->ticket_end);
-
-      //total
-      ticket_number = ticket_number + (p->ticket);
-
-    }
-
-    //use random function to generate random num
-    winner = random_in_range(1, ticket_number);
-
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    {
-      //can only run states that are runnable
-      if(p->state!= RUNNABLE)
-        continue;
-
-      //check winner
-      if(winner >= (p->ticket_start) && winner <= (p->ticket_end)){
-        // Switch to chosen process.  It is the process's job
-        // to release ptable.lock and then reacquire it
-        // before jumping back to us.
-        c->proc=p;
-        switchuvm(p);
-        p->state=RUNNING;
-
-        swtch(&(c->scheduler), p->context);
-        switchkvm();
-
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc=0;
-        break;
-      }
-    }
-  
-    release(&ptable.lock);
-
-  }
-
-
-  //original default simple round robin scheduler
-  /*
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
@@ -498,7 +353,6 @@ scheduler(void)
     release(&ptable.lock);
 
   }
-  */
 }
 
 // Enter scheduler.  Must hold only ptable.lock
@@ -677,14 +531,4 @@ procdump(void)
     }
     cprintf("\n");
   }
-}
-
-//syscall set priority
-//hint call yield
-void setpriority(int priority_lvl)
-{
-  struct proc *curproc = myproc();
-  curproc->priority_val = priority_lvl;
-  yield();
-
 }
