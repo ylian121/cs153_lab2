@@ -328,6 +328,8 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+
+//priority scheduler
 void
 scheduler(void)
 {
