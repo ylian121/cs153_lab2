@@ -433,7 +433,7 @@ scheduler(void)
     }
 
     //use random function to generate random num
-    winner = randomRange(1, ticket_number);
+    winner = random_in_range(1, ticket_number);
 
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
