@@ -95,10 +95,17 @@ int
 sys_setpriority(void)
 {
   int priority_val;
-  if(argint(0, &priority_val < 0 || priority_val < 0 || priority_val > MAXPRIO){
+
+  if(argint(0, &priority_val) < 0) {
     return -1;
   }
-  proc_priority = priority;
+
+  if (priority_val < 0 || priority_val > MAXPRIO) {
+	  return -1; 
+  }
+
+  struct proc *p = myproc(); 
+  p->priority_val = priority_val;
  
   return 0;
 }
@@ -106,7 +113,13 @@ sys_setpriority(void)
 int
 sys_getpriority(void)
 { 
-  return proc->priorit_val;
+	struct proc *p = myproc(); 
+	
+	if (p == 0) {
+		return -1;
+	}
+
+  return p->priority_val;
 }
 
 

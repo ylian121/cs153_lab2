@@ -363,7 +363,7 @@ scheduler(void)
     //apply priority donation to all processes 
     for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
 	    if (p->state == RUNNABLE) {
-		    donate_prioirity(p);
+		    donate_priority(p);
 	    }
     }
 

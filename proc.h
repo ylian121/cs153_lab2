@@ -1,4 +1,6 @@
 // Per-CPU state
+
+#define MAXPRIO 31
 struct cpu {
   uchar apicid;                // Local APIC ID
   struct context *scheduler;   // swtch() here to enter scheduler
