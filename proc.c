@@ -217,13 +217,15 @@ fork(void)
 
   //child inherit parent priority val
   np->priority_val=curproc->priority_val;
-
+  //setting original priority
+  np->original_priority = curproc->priority_val;
 
   pid = np->pid;
 
   acquire(&ptable.lock);
 
   np->state = RUNNABLE;
+
 
   release(&ptable.lock);
 
@@ -272,6 +274,7 @@ exit(void)
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
+  donate_priority(curproc);
   sched();
   panic("zombie exit");
 }
@@ -315,9 +318,26 @@ wait(void)
       return -1;
     }
 
+    donate_priority(curproc);
+
     // Wait for children to exit.  (See wakeup1 call in proc_exit.)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
+}
+
+//setting up donate priority 
+void donate_priority(struct proc *p) {
+	struct proc *parent = p->parent;
+
+	while(parent) {
+		if (parent->priority_val < p->priority_val) {
+			parent->priority_val = p->priority_val;
+		} else {
+			break;
+		}
+
+		parent = parent->parent;
+	}
 }
 
 //PAGEBREAK: 42
@@ -339,6 +359,14 @@ scheduler(void)
   for(;;){
     // Enable interrupts on this processor.
     sti();
+
+    //apply priority donation to all processes 
+    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+	    if (p->state == RUNNABLE) {
+		    donate_prioirity(p);
+	    }
+    }
+
     //declare priority value variable
     //range: 0 to 30 then highest priority can't pass 31
     int h_prior_val = 31;
@@ -608,3 +636,5 @@ void setpriority(int priority_lvl)
   yield();
 
 }
+
+

@@ -94,12 +94,19 @@ sys_uptime(void)
 int
 sys_setpriority(void)
 {
-  int cur_priority_val;
-  if(argint(0, &cur_priority_val) < 0){
+  int priority_val;
+  if(argint(0, &priority_val < 0 || priority_val < 0 || priority_val > MAXPRIO){
     return -1;
   }
-  //call
-  //setpriority(5);
-  setpriority(cur_priority_val);
+  proc_priority = priority;
+ 
   return 0;
 }
+
+int
+sys_getpriority(void)
+{ 
+  return proc->priorit_val;
+}
+
+
