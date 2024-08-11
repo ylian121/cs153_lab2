@@ -21,6 +21,16 @@ unsigned long lcg_rand() {
 
 // Generate a random number within a specific range [min, max]
 int random_in_range(int min, int max) {
+    //added edge cases
+    //maybe causing error if they are equal
+    //divison by zero
+    if(max == min){
+        return min;
+    } else if(max < min){
+        int temp = max;
+        max = min;
+        min = temp;
+    }
     return min + (lcg_rand() % (max - min + 1));
 }
 
