@@ -25,7 +25,7 @@ void testAging(void) {
                 asm("nop");
             }
 
-            printf(1, "Child process %d with priority %d finished.\n", getpid(), getpriority());
+            printf(1, "Child process %d with priority %d finished.\n", getpid(), priorities[i]);
             exit();
         }
     }
