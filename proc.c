@@ -392,7 +392,7 @@ scheduler(void)
 
     //need range??
     //need to keep track of the range each ticket has
-    int start_ticket = 0;
+    //int start_ticket = 0;
 
     int last_ticket = 0;
 
