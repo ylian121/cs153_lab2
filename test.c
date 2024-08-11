@@ -35,6 +35,9 @@ int main() {
 }
 */
 
+//chatgpt wrote this test to test the priority scheduler
+//more organized and clear to see results
+
 #include "types.h"
 #include "user.h"
 
