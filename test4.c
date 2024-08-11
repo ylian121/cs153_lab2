@@ -1,3 +1,6 @@
+//chatgpt wrote this test to test the lottery scheduler
+//more organized and clear to see results
+
 #include "types.h"
 #include "user.h"
 

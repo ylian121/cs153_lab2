@@ -1,3 +1,6 @@
+//chatgpt wrote this Linear Congruential Generator
+//to generate a random number to support lottery scheduler
+
 #include "param.h"
 #include "types.h"
 #include "defs.h"
@@ -5,7 +8,7 @@
 //to generate a random number without using the rand() function
 //built into c++
 //doesn't work for some reason
-//using LCG method from gpt
+//using LCG method
 
 // Linear Congruential Generator (LCG) 
 const unsigned long a = 1664525; // Multiplier
