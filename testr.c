@@ -1,5 +1,7 @@
+//chatgpt wrote this test to test the priority scheduler
+//more organized and clear to see results
+
 #include "types.h"
-#include "stat.h"
 #include "user.h"
 
 void test_process(char *name, int iterations) {
